@@ -2,6 +2,9 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 let dotenv = require("dotenv");
+let cookieParser = require("cookie-parser")
+let flash =require("connect-flash")
+let session = require("express-session")
 
 dotenv.config();
 
@@ -27,13 +30,21 @@ app.set('view engine', 'ejs');
 // middlewares
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended:false}));
+app.use(cookieParser())
+app.use(express.static('public'));
+app.use(flash());
+app.use(session({
+    secret: 'myscret',
+    resave: false,
+    saveUninitialized:false
+}))
+
 
 
 // routes
 app.use('/', indexRoutes);
 
+
 app.listen(app.get('port'), () =>{
     console.log(`server on port ${app.get('port')}`);
 })
-
-
